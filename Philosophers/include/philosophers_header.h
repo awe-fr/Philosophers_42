@@ -23,6 +23,14 @@
 typedef struct s_struct
 {
 	pthread_t	*philosophe;
+	pthread_mutex_t *fork;
+	int	number_of_philosopher;
+	int	time_to_die;
+	int	time_to_eat;
+	int	time_to_sleep;
+	int	how_much_eat;
 }	t_struct;
+
+int	ft_atoi(const char *str);
 
 #endif
