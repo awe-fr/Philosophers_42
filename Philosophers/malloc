@@ -1,3 +1,7 @@
 thread_init:
 
-tableau de thread "*th"
+tableau de thread "*philosophers"
+
+mutex_init;
+
+tableau de mutex "*fork"
