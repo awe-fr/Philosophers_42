@@ -20,16 +20,28 @@
 # include <string.h>
 # include <stdlib.h>
 
+typedef struct s_perso
+{
+	int	id;
+	int	last_meal;
+	int	how_much_eat;
+	int	is_dead;
+}	t_perso;
+
 typedef struct s_struct
 {
 	pthread_t	*philosophe;
 	pthread_mutex_t *fork;
+	pthread_mutex_t write;
 	int	number_of_philosopher;
 	int	time_to_die;
 	int	time_to_eat;
 	int	time_to_sleep;
 	int	how_much_eat;
+	int	id;
+	int	time_start;
 }	t_struct;
+
 
 int	ft_atoi(const char *str);
 
