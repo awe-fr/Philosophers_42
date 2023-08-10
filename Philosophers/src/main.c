@@ -20,6 +20,18 @@ int	get_time(void)
 	return((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
 }
 
+void	print(int time, int id, char *to_print, t_struct *perso)
+{
+	pthread_mutex_lock(&perso->write);
+	if (info->is_dead != -1)
+	{
+		pthread_mutex_unlock(&info->write);
+		return ;
+	}
+	printf("%d    %d     %s\n", time - perso->time_start, id, to_print);
+	pthread_mutex_unlock(&perso->write);
+}
+
 int	check_death(t_struct *info, t_perso *perso, int time_to_pass)
 {
 	if (info->is_dead != -1)
@@ -28,10 +40,13 @@ int	check_death(t_struct *info, t_perso *perso, int time_to_pass)
 	{
 		pthread_mutex_lock(&info->run);
 		if (info->is_dead != -1)
+		{
+			pthread_mutex_unlock(&info->run);
 			return (1);
+		}
 		info->is_dead = perso->id;
 		pthread_mutex_lock(&info->write);
-		printf("%d    %d     is dead\n", get_time() - info->time_start, info->is_dead);
+		printf("%d    %d     is dead\n", get_time() - perso->time_start, info->is_dead);
 		pthread_mutex_unlock(&info->write);
 		pthread_mutex_unlock(&info->run);
 		return (1);
@@ -40,11 +55,13 @@ int	check_death(t_struct *info, t_perso *perso, int time_to_pass)
 	{
 		pthread_mutex_lock(&info->run);
 		if (info->is_dead != -1)
+		{
+			pthread_mutex_unlock(&info->run);
 			return (1);
-		usleep(20 * 1000);
+		}
+		usleep((info->time_to_die - (get_time() - info->time_start) - perso->last_meal) * 1000);
 		info->is_dead = perso->id;
 		pthread_mutex_lock(&info->write);
-//		printf("%d, %d, %d\n", perso->last_meal, time_to_pass, info->time_to_die);
 		printf("%d    %d     is dead\n", get_time() - info->time_start, info->is_dead);
 		pthread_mutex_unlock(&info->write);
 		pthread_mutex_unlock(&info->run);
@@ -56,22 +73,22 @@ int	check_death(t_struct *info, t_perso *perso, int time_to_pass)
 void	come_eat(t_struct *info, t_perso *perso)
 {
 	pthread_mutex_lock(&info->fork[perso->id - 1]);
-	pthread_mutex_lock(&info->write);
-	printf("%d    %d     has taken a fork\n", get_time() - info->time_start, perso->id);
-	pthread_mutex_unlock(&info->write);
+	print(get_time(), perso->id, "has taken a fork", info);
 	if (perso->id == info->number_of_philosopher)
 		pthread_mutex_lock(&info->fork[0]);
 	else
 		pthread_mutex_lock(&info->fork[perso->id]);
-	pthread_mutex_lock(&info->write);
-	printf("%d    %d     has taken a fork\n", get_time() - info->time_start, perso->id);
-	pthread_mutex_unlock(&info->write);
-	pthread_mutex_lock(&info->write);
-	printf("%d    %d     is eating\n", get_time() - info->time_start, perso->id);
-	pthread_mutex_unlock(&info->write);
+	print(get_time(), perso->id, "has taken a fork", info);
+	print(get_time(), perso->id, "is eating", info);
 	perso->last_meal = get_time() - info->time_start;
 	if (check_death(info, perso, info->time_to_eat) == 1)
+	{
+		if (perso->id == info->number_of_philosopher)
+			pthread_mutex_unlock(&info->fork[0]);
+		else
+			pthread_mutex_unlock(&info->fork[perso->id]);
 		return ;
+	}
 	usleep(info->time_to_eat * 1000);
 	pthread_mutex_unlock(&info->fork[perso->id - 1]);
 	if (perso->id == info->number_of_philosopher)
@@ -80,9 +97,7 @@ void	come_eat(t_struct *info, t_perso *perso)
 		pthread_mutex_unlock(&info->fork[perso->id]);
 	if (check_death(info, perso, info->time_to_sleep) == 1)
 		return ;
-	pthread_mutex_lock(&info->write);
-	printf("%d    %d     is sleeping\n", get_time() - info->time_start, perso->id);
-	pthread_mutex_unlock(&info->write);
+	print(get_time(), perso->id, "is sleeping", info);
 	usleep(info->time_to_sleep * 1000);
 }
 
@@ -97,6 +112,12 @@ void	*routine(void *base)
 	perso.id = info->id + 1;
 	perso.how_much_eat = info->how_much_eat;
 	perso.last_meal = get_time() - info->time_start;
+	perso.time_start = info->time_start;
+	perso.is_dead = -1;
+	perso.time_to_die = info->time_to_die;
+	pthread_create(&(perso->philo), NULL, is_dead, perso);
+	
+	
 	while (perso.how_much_eat != 0)
 	{
 		if (check_death(info, &perso, 0) == 1)
@@ -185,8 +206,9 @@ void	cancel_mutex(char **av, t_struct *base)
 	pthread_mutex_destroy(&(base->run));
 }
 
-void	is_dead(t_struct *info)
+void	is_dead(void *perso)
 {
+	t
 	while (1)
 	{
 		if (info->is_dead != -1)
@@ -212,7 +234,6 @@ int main(int ac, char **av)
 	basic_var_init(av, &base);
 	mutex_init(av, &base);
 	thread_init(av, &base);
-//	is_dead(&base);
 	do_the_join(av, &base);
 	cancel_mutex(av, &base);
 	return (0);

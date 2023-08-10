@@ -6,7 +6,7 @@
 /*   By: srajaoui <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 14:26:16 by srajaoui          #+#    #+#             */
-/*   Updated: 2023/07/31 14:29:46 by srajaoui         ###   ########.fr       */
+/*   Updated: 2023/08/11 01:03:16 by srajaoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,17 +22,21 @@
 
 typedef struct s_perso
 {
+	pthread_t       philo;
+	pthread_mutex_t write;
 	int	id;
 	int	last_meal;
 	int	how_much_eat;
+	int	time_start;
 	int	is_dead;
+	int	time_to_die;
 }	t_perso;
 
 typedef struct s_struct
 {
 	pthread_t	*philosophe;
 	pthread_mutex_t *fork;
-	pthread_mutex_t write;
+	pthread_mutex_t run;
 	int	number_of_philosopher;
 	int	time_to_die;
 	int	time_to_eat;
@@ -40,6 +44,7 @@ typedef struct s_struct
 	int	how_much_eat;
 	int	id;
 	int	time_start;
+	int	is_dead;
 }	t_struct;
 
 
