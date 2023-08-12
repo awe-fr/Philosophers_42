@@ -51,17 +51,16 @@ void	*routine(void *base)
 	info = (t_struct *)base;
 	perso_init(&perso, info);
 	pthread_mutex_init(&(perso.run), NULL);
-	pthread_mutex_init(&(perso.write), NULL);
+	perso.write = &info->write;
 	pthread_create(&(perso.philo), NULL, is_dead, &perso);
 	while(perso.how_much_eat !=  0)
 	{
-		printf("%d   %d\n", perso.last_meal, perso.id);
 		take_fork(info, &perso);
 		perso.how_much_eat -= 1;
 		go_sleep(info, &perso);	
 	}
 	pthread_join(perso.philo, NULL);
-	pthread_mutex_destroy(&(perso.write));
+//	pthread_mutex_destroy(&(perso.write));
 	pthread_mutex_destroy(&(perso.run));
 	return NULL;
 }

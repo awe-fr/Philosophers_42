@@ -23,13 +23,13 @@
 typedef struct s_perso
 {
 	pthread_t       philo;
-	pthread_mutex_t write;
+	pthread_mutex_t *write;
 	pthread_mutex_t run;
+	int	*is_dead;
 	int	id;
 	int	last_meal;
 	int	how_much_eat;
 	int	time_start;
-	int	is_dead;
 	int	time_to_die;
 }	t_perso;
 

@@ -17,7 +17,7 @@ void	perso_init(t_perso *perso, t_struct *info)
 	perso->id = info->id + 1;
 	perso->how_much_eat = info->how_much_eat;
 	perso->last_meal = get_time() - info->time_start;
-	perso->is_dead = -1;
+	perso->is_dead = &(info->is_dead);
 	perso->time_to_die = info->time_to_die;
 	perso->time_start = info->time_start;
 }
