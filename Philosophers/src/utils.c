@@ -1,3 +1,5 @@
+#include "philosophers_header.h"
+
 int	ft_atoi(const char *str)
 {
 	int	i;
@@ -21,4 +23,24 @@ int	ft_atoi(const char *str)
 		i++;
 	}
 	return (result * neg);
+}
+
+void	print(int time, int id, char *to_print, t_struct *info)
+{
+	pthread_mutex_lock(&info->write);
+	if (info->is_dead != -1)
+	{
+		pthread_mutex_unlock(&info->write);
+		return ;
+	}
+	printf("%d    %d     %s\n", time - info->time_start, id, to_print);
+	pthread_mutex_unlock(&info->write);
+}
+
+int	get_time(void)
+{
+	struct timeval tv;
+	
+	gettimeofday(&tv, NULL);
+	return((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
 }

@@ -10,9 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/philosophers_header.h"
+#include "philosophers_header.h"
 
-int	get_time(void)
+/*int	get_time(void)
 {
 	struct timeval tv;
 	
@@ -30,9 +30,9 @@ void	print(int time, int id, char *to_print, t_struct *perso)
 	}
 	printf("%d    %d     %s\n", time - perso->time_start, id, to_print);
 	pthread_mutex_unlock(&perso->write);
-}
+}*/
 
-int	check_death(t_struct *info, t_perso *perso, int time_to_pass)
+/*int	check_death(t_struct *info, t_perso *perso, int time_to_pass)
 {
 	if (info->is_dead != -1)
 		return (1);
@@ -68,9 +68,9 @@ int	check_death(t_struct *info, t_perso *perso, int time_to_pass)
 		return (1);
 	}
 	return (0);
-}
+}*/
 
-void	come_eat(t_struct *info, t_perso *perso)
+/*void	come_eat(t_struct *info, t_perso *perso)
 {
 	pthread_mutex_lock(&info->fork[perso->id - 1]);
 	print(get_time(), perso->id, "has taken a fork", info);
@@ -99,9 +99,9 @@ void	come_eat(t_struct *info, t_perso *perso)
 		return ;
 	print(get_time(), perso->id, "is sleeping", info);
 	usleep(info->time_to_sleep * 1000);
-}
+}*/
 
-
+/*
 void	*routine(void *base)
 {
 	t_struct *info;
@@ -131,9 +131,9 @@ void	*routine(void *base)
 		pthread_mutex_unlock(&info->write);
 	}
 	return NULL;
-}
+}*/
 
-void	thread_init(char **av, t_struct *base)
+/*void	thread_init(char **av, t_struct *base)
 {
 	int		i;
 	
@@ -147,9 +147,9 @@ void	thread_init(char **av, t_struct *base)
 		usleep(5 * base->number_of_philosopher);
 		i++;
 	}
-}
+}*/
 
-void	mutex_init(char **av, t_struct *base)
+/*void	mutex_init(char **av, t_struct *base)
 {
 	int		i;
 	
@@ -162,22 +162,7 @@ void	mutex_init(char **av, t_struct *base)
 	}
 	pthread_mutex_init(&(base->write), NULL);
 	pthread_mutex_init(&(base->run), NULL);
-}
-
-void	basic_var_init(char **av, t_struct *base)
-{
-	base->number_of_philosopher = ft_atoi(av[1]);
-	base->time_to_die = ft_atoi(av[2]);
-	base->time_to_eat = ft_atoi(av[3]);
-	base->time_to_sleep = ft_atoi(av[4]);
-	if (av[5])
-		base->how_much_eat = ft_atoi(av[5]);
-	else
-		base->how_much_eat = -1;
-	base->is_dead = -1;
-//	if ((ft_atoi(av[1]) == -2) || (ft_atoi(av[2]) == -2) || 
-//	(ft_atoi(av[3]) == -2) || (ft_atoi(av[4]) == -2))
-}
+}*/
 
 void	do_the_join(char **av, t_struct *base)
 {
@@ -203,12 +188,10 @@ void	cancel_mutex(char **av, t_struct *base)
 	}
 	free(base->fork);
 	pthread_mutex_destroy(&(base->write));
-	pthread_mutex_destroy(&(base->run));
 }
 
-void	is_dead(void *perso)
+/*void	is_dead(void *perso)
 {
-	t
 	while (1)
 	{
 		if (info->is_dead != -1)
@@ -221,7 +204,7 @@ void	is_dead(void *perso)
 	}
 	
 	
-}
+}*/
 
 int main(int ac, char **av)
 {
