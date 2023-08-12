@@ -19,6 +19,7 @@ void	perso_init(t_perso *perso, t_struct *info)
 	perso->last_meal = get_time() - info->time_start;
 	perso->is_dead = -1;
 	perso->time_to_die = info->time_to_die;
+	perso->time_start = info->time_start;
 }
 
 void	basic_var_init(char **av, t_struct *base)

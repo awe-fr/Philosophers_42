@@ -6,7 +6,7 @@
 /*   By: srajaoui <srajaoui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/11 01:09:12 by srajaoui          #+#    #+#             */
-/*   Updated: 2023/08/11 01:09:13 by srajaoui         ###   ########.fr       */
+/*   Updated: 2023/08/12 22:13:16 by srajaoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,32 +43,6 @@ void	take_fork(t_struct *info, t_perso *perso)
 		pthread_mutex_unlock(&info->fork[perso->id]);
 }
 
-void	*is_dead(void *perso)
-{
-	t_perso *philo;
-	philo = perso;
-	
-	while(philo->is_dead == -1 && philo->how_much_eat != 0)
-	{
-		if((philo->last_meal - (get_time() - philo->time_start)) >= philo->time_to_die)
-		{
-			pthread_mutex_lock(&philo->run);
-			if (philo->is_dead != -1)
-			{
-				pthread_mutex_unlock(&philo->run);
-				return NULL;
-			}
-			philo->is_dead = philo->id;
-			pthread_mutex_lock(&philo->write);
-			printf("%d    %d     is dead\n", get_time() - philo->time_start, philo->is_dead);
-			pthread_mutex_unlock(&philo->write);
-			pthread_mutex_unlock(&philo->run);
-			return NULL;
-		}
-	}
-	return NULL;
-}
-
 void	*routine(void *base)
 {
 	t_struct *info;
@@ -81,6 +55,7 @@ void	*routine(void *base)
 	pthread_create(&(perso.philo), NULL, is_dead, &perso);
 	while(perso.how_much_eat !=  0)
 	{
+		printf("%d   %d\n", perso.last_meal, perso.id);
 		take_fork(info, &perso);
 		perso.how_much_eat -= 1;
 		go_sleep(info, &perso);	

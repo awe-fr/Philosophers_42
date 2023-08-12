@@ -63,5 +63,6 @@ void	print(int time, int id, char *to_print, t_struct *info);
 int	get_time(void);
 void	do_the_join(char **av, t_struct *base);
 void	cancel_mutex(char **av, t_struct *base);
+void	*is_dead(void *perso);
 
 #endif
