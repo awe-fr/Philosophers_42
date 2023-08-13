@@ -188,6 +188,7 @@ void	cancel_mutex(char **av, t_struct *base)
 	}
 	free(base->fork);
 	pthread_mutex_destroy(&(base->write));
+	pthread_mutex_destroy(&(base->run));
 }
 
 /*void	is_dead(void *perso)

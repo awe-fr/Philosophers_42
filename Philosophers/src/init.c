@@ -20,6 +20,7 @@ void	perso_init(t_perso *perso, t_struct *info)
 	perso->is_dead = &(info->is_dead);
 	perso->time_to_die = info->time_to_die;
 	perso->time_start = info->time_start;
+	//perso->test = info->id + 1;
 }
 
 void	basic_var_init(char **av, t_struct *base)
@@ -47,6 +48,7 @@ void	mutex_init(char **av, t_struct *base)
 		i++;
 	}
 	pthread_mutex_init(&(base->write), NULL);
+	pthread_mutex_init(&(base->run), NULL);
 }
 
 void	thread_init(char **av, t_struct *base)

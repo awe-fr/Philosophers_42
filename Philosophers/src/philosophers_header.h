@@ -24,13 +24,14 @@ typedef struct s_perso
 {
 	pthread_t       philo;
 	pthread_mutex_t *write;
-	pthread_mutex_t run;
+	pthread_mutex_t *run;
 	int	*is_dead;
 	int	id;
 	int	last_meal;
 	int	how_much_eat;
 	int	time_start;
 	int	time_to_die;
+//	int	test;
 }	t_perso;
 
 typedef struct s_struct
@@ -38,6 +39,7 @@ typedef struct s_struct
 	pthread_t	*philosophe;
 	pthread_mutex_t *fork;
 	pthread_mutex_t write;
+	pthread_mutex_t run;
 	int	number_of_philosopher;
 	int	time_to_die;
 	int	time_to_eat;
