@@ -6,7 +6,7 @@
 /*   By: srajaoui <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 14:26:16 by srajaoui          #+#    #+#             */
-/*   Updated: 2023/08/11 01:03:16 by srajaoui         ###   ########.fr       */
+/*   Updated: 2023/08/13 06:46:23 by srajaoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,13 +25,16 @@ typedef struct s_perso
 	pthread_t       philo;
 	pthread_mutex_t *write;
 	pthread_mutex_t *run;
-	int	*is_dead;
-	int	id;
 	int	last_meal;
-	int	how_much_eat;
-	int	time_start;
+	int	number_of_philosopher;
 	int	time_to_die;
-//	int	test;
+	int	time_to_eat;
+	int	time_to_sleep;
+	int	how_much_eat;
+	int	id;
+	int	time_start;
+	int	*is_dead;
+	//t_struct *base;
 }	t_perso;
 
 typedef struct s_struct
@@ -40,6 +43,7 @@ typedef struct s_struct
 	pthread_mutex_t *fork;
 	pthread_mutex_t write;
 	pthread_mutex_t run;
+	pthread_mutex_t assign;
 	int	number_of_philosopher;
 	int	time_to_die;
 	int	time_to_eat;
@@ -60,11 +64,12 @@ void	take_fork(t_struct *info, t_perso *perso);
 void	come_eat(t_struct *info, t_perso *perso);
 void	go_sleep(t_struct *info, t_perso *perso);
 void	perso_init(t_perso *perso, t_struct *info);
-void	basic_var_init(char **av, t_struct *base);
 void	print(int time, int id, char *to_print, t_struct *info);
 int	get_time(void);
 void	do_the_join(char **av, t_struct *base);
 void	cancel_mutex(char **av, t_struct *base);
 void	*is_dead(void *perso);
+void	only_one(t_struct *info);
+int	is_number(t_struct *base);
 
 #endif

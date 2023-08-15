@@ -28,19 +28,19 @@ void	come_eat(t_struct *info, t_perso *perso)
 
 void	take_fork(t_struct *info, t_perso *perso)
 {
+	int	fork_id;
+
+	if (perso->id == info->number_of_philosopher)
+		fork_id = 0;
+	else
+		fork_id = perso->id;
 	pthread_mutex_lock(&info->fork[perso->id - 1]);
 	print(get_time(), perso->id, "has taken a fork", info);
-	if (perso->id == info->number_of_philosopher)
-		pthread_mutex_lock(&info->fork[0]);
-	else
-		pthread_mutex_lock(&info->fork[perso->id]);
+	pthread_mutex_lock(&info->fork[fork_id]);
 	print(get_time(), perso->id, "has taken a fork", info);
 	come_eat(info, perso);
+	pthread_mutex_unlock(&info->fork[fork_id]);
 	pthread_mutex_unlock(&info->fork[perso->id - 1]);
-	if (perso->id == info->number_of_philosopher)
-		pthread_mutex_unlock(&info->fork[0]);
-	else
-		pthread_mutex_unlock(&info->fork[perso->id]);
 }
 
 void	*routine(void *base)
@@ -52,6 +52,7 @@ void	*routine(void *base)
 	perso_init(&perso, info);
 	perso.run = &info->run;
 	perso.write = &info->write;
+	pthread_mutex_unlock(&info->assign);
 	pthread_create(&(perso.philo), NULL, is_dead, &perso);
 	while(perso.how_much_eat !=  0)
 	{
@@ -63,4 +64,11 @@ void	*routine(void *base)
 	}
 	pthread_join(perso.philo, NULL);
 	return NULL;
+}
+
+void	only_one(t_struct *info)
+{
+	printf("%d    %d     %s\n", 0, 1, "has taken a fork");
+	usleep(info->time_to_die * 1000);
+	printf("%d    %d     %s\n", info->time_to_die, 1, "id dead");
 }

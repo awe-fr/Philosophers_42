@@ -14,7 +14,7 @@ int	ft_atoi(const char *str)
 	if (str[i] == '-' || str[i] == '+')
 	{
 		if (str[i] == '-')
-			return (-2);
+			neg *= -1;
 		i++;
 	}
 	while (str[i] >= '0' && str[i] <= '9')
@@ -28,12 +28,11 @@ int	ft_atoi(const char *str)
 void	print(int time, int id, char *to_print, t_struct *info)
 {
 	pthread_mutex_lock(&info->write);
-	if (info->is_dead != -1)
-	{
-		pthread_mutex_unlock(&info->write);
-		return ;
-	}
-	printf("%d    %d     %s\n", time - info->time_start, id, to_print);
+	int	rtime;
+	
+	rtime = time - info->time_start;
+	if (info->is_dead == -1)
+		printf("%d    %d     %s\n", rtime, id, to_print);
 	pthread_mutex_unlock(&info->write);
 }
 
@@ -43,4 +42,19 @@ int	get_time(void)
 	
 	gettimeofday(&tv, NULL);
 	return((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
+}
+
+int	is_number(t_struct *base)
+{
+	if (base->number_of_philosopher <= 0)
+		return (-1);
+	if (base->time_to_die <= 0)
+		return (-1);
+	if (base->time_to_eat <= 0)
+		return (-1);
+	if (base->time_to_sleep <= 0)
+		return (-1);
+	if (base->how_much_eat == 0 || base->how_much_eat <= -2)
+		return (-1);
+	return (0);
 }

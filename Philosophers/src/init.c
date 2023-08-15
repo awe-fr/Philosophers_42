@@ -20,7 +20,10 @@ void	perso_init(t_perso *perso, t_struct *info)
 	perso->is_dead = &(info->is_dead);
 	perso->time_to_die = info->time_to_die;
 	perso->time_start = info->time_start;
-	//perso->test = info->id + 1;
+	perso->number_of_philosopher = info->number_of_philosopher;
+	perso->time_to_eat = info->time_to_eat;
+	perso->time_to_sleep = info->time_to_sleep;
+	
 }
 
 void	basic_var_init(char **av, t_struct *base)
@@ -49,20 +52,26 @@ void	mutex_init(char **av, t_struct *base)
 	}
 	pthread_mutex_init(&(base->write), NULL);
 	pthread_mutex_init(&(base->run), NULL);
+	pthread_mutex_init(&(base->assign), NULL);
 }
+
 
 void	thread_init(char **av, t_struct *base)
 {
 	int		i;
-	
+
 	i = 0;
 	base->time_start = get_time();
 	base->philosophe = (pthread_t *)malloc(base->number_of_philosopher * sizeof(pthread_t));
+	if (base->philosophe == NULL)
+		return ;
 	while (i < base->number_of_philosopher)
 	{
+		pthread_mutex_lock(&base->assign);
 		base->id = i;
-		pthread_create(&(base->philosophe[i]), NULL, routine, base);
-		usleep(5 * base->number_of_philosopher);
+		if (pthread_create(&(base->philosophe[i]), NULL, routine, base) != 0)
+			return ;
+		//usleep(5 * base->number_of_philosopher);
 		i++;
 	}
 }
