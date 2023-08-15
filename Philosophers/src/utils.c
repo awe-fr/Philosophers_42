@@ -25,15 +25,15 @@ int	ft_atoi(const char *str)
 	return (result * neg);
 }
 
-void	print(int time, int id, char *to_print, t_struct *info)
+void	print(int time, int id, char *to_print, t_perso *perso)
 {
-	pthread_mutex_lock(&info->write);
+	pthread_mutex_lock(&perso->base->write);
 	int	rtime;
 	
-	rtime = time - info->time_start;
-	if (info->is_dead == -1)
+	rtime = time - perso->time_start;
+	if (perso->base->is_dead == -1)
 		printf("%d    %d     %s\n", rtime, id, to_print);
-	pthread_mutex_unlock(&info->write);
+	pthread_mutex_unlock(&perso->base->write);
 }
 
 int	get_time(void)
@@ -44,17 +44,17 @@ int	get_time(void)
 	return((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
 }
 
-int	is_number(t_struct *base)
+int	is_number(t_perso *perso)
 {
-	if (base->number_of_philosopher <= 0)
+	if (perso[0].number_of_philosopher <= 0)
 		return (-1);
-	if (base->time_to_die <= 0)
+	if (perso[0].time_to_die <= 0)
 		return (-1);
-	if (base->time_to_eat <= 0)
+	if (perso[0].time_to_eat <= 0)
 		return (-1);
-	if (base->time_to_sleep <= 0)
+	if (perso[0].time_to_sleep <= 0)
 		return (-1);
-	if (base->how_much_eat == 0 || base->how_much_eat <= -2)
+	if (perso[0].how_much_eat == 0 || perso[0].how_much_eat <= -2)
 		return (-1);
 	return (0);
 }

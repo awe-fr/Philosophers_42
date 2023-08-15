@@ -12,24 +12,24 @@
 
 #include "philosophers_header.h"
 
-void	do_the_join(char **av, t_struct *base)
+void	do_the_join(t_struct *base, t_perso *perso)
 {
 	int i;
 	
 	i = 0;
-	while (i < base->number_of_philosopher)
+	while (i < perso->number_of_philosopher)
 	{
 		pthread_join(base->philosophe[i], NULL);
 		i++;
 	}
 }
 
-void	cancel_mutex(char **av, t_struct *base)
+void	cancel_mutex(t_struct *base, t_perso *perso)
 {
 	int i;
 	
 	i = 0;
-	while (i < base->number_of_philosopher)
+	while (i < perso->number_of_philosopher)
 	{
 		pthread_mutex_destroy(&(base->fork[i]));
 		i++;
@@ -38,7 +38,7 @@ void	cancel_mutex(char **av, t_struct *base)
 	free(base->philosophe);
 	pthread_mutex_destroy(&(base->write));
 	pthread_mutex_destroy(&(base->run));
-	pthread_mutex_destroy(&(base->assign));
+	free(perso);
 }
 
 int main(int ac, char **av)
@@ -49,20 +49,22 @@ int main(int ac, char **av)
 		return (0);
 	}
 	t_struct	base;
-	basic_var_init(av, &base);
-	if (base.number_of_philosopher == 1)
+	t_perso	*perso;
+	perso = basic_var_init(av, &base);
+	if (perso[0].number_of_philosopher == 1)
 	{
-		only_one(&base);
+		only_one(perso);
+		free(perso);
 		return (0);
 	}
-	if (is_number(&base) == -1)
+	if (is_number(perso) == -1)
 	{
 		write(1, "Wrong imput\n", 12);
 		return (0);
 	}
-	mutex_init(av, &base);
-	thread_init(av, &base);
-	do_the_join(av, &base);
-	cancel_mutex(av, &base);
+	mutex_init(&base, perso);
+	thread_init(perso);
+	do_the_join(&base, perso);
+	cancel_mutex(&base, perso);
 	return (0);
 }
