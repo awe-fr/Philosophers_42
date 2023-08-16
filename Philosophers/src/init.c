@@ -69,18 +69,18 @@ void	mutex_init(t_struct *base, t_perso *perso)
 	pthread_mutex_init(&(base->run), NULL);
 }
 
-void	thread_init(t_perso *perso)
+void	thread_init(t_perso *perso, t_struct *base)
 {
 	int		i;
 
 	i = 0;
 	//base->time_start = get_time();
-	perso[0].base->philosophe = (pthread_t *)malloc(perso[i].number_of_philosopher * sizeof(pthread_t));
-	if (perso[i].base->philosophe == NULL)
-		return ;
+	//base->philosophe = (pthread_t *)malloc(perso[0].number_of_philosopher * sizeof(pthread_t));
+	//if (base->philosophe == NULL)
+	//	return ;
 	while (i < perso[0].number_of_philosopher)
 	{
-		if (pthread_create(&(perso[i].base->philosophe[i]), NULL, routine, &perso[i]) != 0)
+		if (pthread_create(&perso[i].philosophe, NULL, routine, &perso[i]) != 0)
 			return ;
 		usleep(10);
 		i++;

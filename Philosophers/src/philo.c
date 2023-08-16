@@ -66,13 +66,13 @@ void	*routine(void *per)
 	what_fork(perso);
 	while(perso->how_much_eat !=  0)
 	{
-		if (perso->base->is_dead != -1)
-			break;
+	//	if (perso->base->is_dead != -1)
+	//		break;
 		take_fork(perso);
 		perso->how_much_eat -= 1;
 		go_sleep(perso);	
 	}
-	pthread_join(perso->philo, NULL);
+	//pthread_join(perso->philo, NULL);
 	return NULL;
 }
 

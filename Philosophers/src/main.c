@@ -17,9 +17,9 @@ void	do_the_join(t_struct *base, t_perso *perso)
 	int i;
 	
 	i = 0;
-	while (i < perso->number_of_philosopher)
+	while (i < perso[i].number_of_philosopher)
 	{
-		pthread_join(base->philosophe[i], NULL);
+		pthread_join(perso[i].philosophe, NULL);
 		i++;
 	}
 }
@@ -35,7 +35,6 @@ void	cancel_mutex(t_struct *base, t_perso *perso)
 		i++;
 	}
 	free(base->fork);
-	free(base->philosophe);
 	pthread_mutex_destroy(&(base->write));
 	pthread_mutex_destroy(&(base->run));
 	free(perso);
@@ -63,7 +62,7 @@ int main(int ac, char **av)
 		return (0);
 	}
 	mutex_init(&base, perso);
-	thread_init(perso);
+	thread_init(perso, &base);
 	do_the_join(&base, perso);
 	cancel_mutex(&base, perso);
 	return (0);

@@ -23,7 +23,7 @@
 
 typedef struct s_struct
 {
-	pthread_t	*philosophe;
+//	pthread_t	*philosophe;
 	pthread_mutex_t *fork;
 	pthread_mutex_t write;
 	pthread_mutex_t run;
@@ -33,7 +33,8 @@ typedef struct s_struct
 
 typedef struct s_perso
 {
-	pthread_t       philo;
+	pthread_t       death;
+	pthread_t       philosophe;
 	int	number_of_philosopher;
 	int	time_to_die;
 	int	time_to_eat;
@@ -51,7 +52,7 @@ typedef struct s_perso
 int	ft_atoi(const char *str);
 t_perso	*basic_var_init(char **av, t_struct *base);
 void	mutex_init(t_struct *base, t_perso *perso);
-void	thread_init(t_perso *perso);
+void	thread_init(t_perso *perso, t_struct *base);
 void	*routine(void *perso);
 void	take_fork(t_perso *perso);
 void	come_eat(t_perso *perso);
