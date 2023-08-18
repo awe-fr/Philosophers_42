@@ -37,14 +37,12 @@ int	ft_atoi(const char *str)
 void    print(int id, char *to_print, t_perso *perso)
 {
     pthread_mutex_lock(&perso->base->write);
-    int rtime;
+    long int rtime;
 
-    pthread_mutex_lock(&perso->base->run);
+    //pthread_mutex_lock(&perso->base->run);
     rtime = get_time() - perso->time_start;
     if (perso->base->is_dead == -1)
-    {
-        printf("%d | %d | %s\n", rtime, id, to_print);
-    }
-    pthread_mutex_unlock(&perso->base->run);
+        printf("%ld | %d | %s\n", rtime, id, to_print);
+  //  pthread_mutex_unlock(&perso->base->run);
     pthread_mutex_unlock(&perso->base->write);
 }

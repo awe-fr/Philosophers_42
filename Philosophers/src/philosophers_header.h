@@ -38,6 +38,7 @@ typedef struct s_struct
 	int			how_much_eat;
 	long int	time_start;
 	int			is_dead;
+	int			is_okay;
     t_perso *perso;
 }	t_struct;
 

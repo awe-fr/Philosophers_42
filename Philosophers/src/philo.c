@@ -3,7 +3,9 @@
 void    come_eat(t_perso *perso)
 {
     print(perso->id, "is eating", perso);
+    pthread_mutex_lock(&perso->base->run);
     perso->last_meal = get_time() - perso->time_start;
+    pthread_mutex_unlock(&perso->base->run);
     usleep(perso->time_to_eat * 1000);
 }
 
@@ -35,9 +37,9 @@ void *routine(void *per)
     {
         pthread_mutex_unlock(&perso->base->run);
         take_fork(perso);
-        perso->how_much_eat -= 1;
         go_sleep(perso);
         pthread_mutex_lock(&perso->base->run);
+        perso->how_much_eat -= 1;
     }
     pthread_mutex_unlock(&perso->base->run);
     return NULL;

@@ -13,6 +13,7 @@ int init_basic_var(char **av, t_struct *base)
     pthread_mutex_init(&base->write, NULL);
     pthread_mutex_init(&base->run, NULL);
     base->time_start = get_time();
+    base->is_okay = ft_atoi(av[1]);
     return (0);
 }
 
