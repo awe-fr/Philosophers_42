@@ -1,88 +1,100 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   init.c                                             :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: srajaoui <srajaoui@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/08/11 01:09:03 by srajaoui          #+#    #+#             */
-/*   Updated: 2023/08/11 01:09:05 by srajaoui         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "philosophers_header.h"
 
-// void	perso_init(t_perso *perso, t_struct *info)
-// {
-// 	perso->id = info->id + 1;
-// 	perso->how_much_eat = info->how_much_eat;
-// 	perso->last_meal = get_time() - info->time_start;
-// 	perso->is_dead = &(info->is_dead);
-// 	perso->time_to_die = info->time_to_die;
-// 	perso->time_start = info->time_start;
-// 	perso->number_of_philosopher = info->number_of_philosopher;
-// 	perso->time_to_eat = info->time_to_eat;
-// 	perso->time_to_sleep = info->time_to_sleep;
-// }
-
-t_perso	*basic_var_init(char **av, t_struct *base)
+int init_basic_var(char **av, t_struct *base)
 {
-	t_perso *perso;
-	int i;
-
-	i = 0;
-	perso = (t_perso *)malloc(ft_atoi(av[1]) * sizeof(t_perso));
-	base->is_dead = -1;
-	base->time_start = get_time();
-	while (i < ft_atoi(av[1]))
-	{
-		perso[i].number_of_philosopher = ft_atoi(av[1]);
-		perso[i].time_to_die = ft_atoi(av[2]);
-		perso[i].time_to_eat = ft_atoi(av[3]);
-		perso[i].time_to_sleep = ft_atoi(av[4]);
-		if (av[5])
-			perso[i].how_much_eat = ft_atoi(av[5]);
-		else
-			perso[i].how_much_eat = -1;
-		i++;
-		perso[i].is_dead = &(base->is_dead);
-		perso[i].time_start = base->time_start;
-		perso[i].last_meal = perso[i].time_start;
-		perso[i].id = i + 1;
-		perso[i].base = base;
-	}
-	return (perso);
+    base->philo_number = ft_atoi(av[1]);
+    base->time_to_die = ft_atoi(av[2]);
+    base->time_to_eat = ft_atoi(av[3]);
+    base->time_to_sleep = ft_atoi(av[4]);
+    base->how_much_eat = -1;
+    if (av[5])
+        base->how_much_eat = ft_atoi(av[5]);
+    base->is_dead = -1;
+    pthread_mutex_init(&base->write, NULL);
+    pthread_mutex_init(&base->run, NULL);
+    base->time_start = get_time();
+    return (0);
 }
 
-void	mutex_init(t_struct *base, t_perso *perso)
+int    init_alloc(t_struct *base)
 {
-	int		i;
-	
-	i = 0;
-	base->fork = (pthread_mutex_t *)malloc(perso[0].number_of_philosopher * sizeof(pthread_mutex_t));
-	while (i < perso[0].number_of_philosopher)
-	{
-		pthread_mutex_init(&(base->fork[i]), NULL);
-		i++;
-	}
-	pthread_mutex_init(&(base->write), NULL);
-	pthread_mutex_init(&(base->run), NULL);
+    base->philosophe = malloc(sizeof(pthread_t) * base->philo_number);
+    if (!base->philosophe)
+        return (1);
+    base->fork = malloc(sizeof(pthread_mutex_t) * base->philo_number);
+    if (!base->fork)
+        return (1);
+    base->perso = malloc(sizeof(t_perso) * base->philo_number);
+    if (!base->perso)
+        return (1);
+    return (0);
 }
 
-void	thread_init(t_perso *perso, t_struct *base)
+void    init_philo(t_struct *base)
 {
-	int		i;
+    int i;
 
-	i = 0;
-	//base->time_start = get_time();
-	//base->philosophe = (pthread_t *)malloc(perso[0].number_of_philosopher * sizeof(pthread_t));
-	//if (base->philosophe == NULL)
-	//	return ;
-	while (i < perso[0].number_of_philosopher)
-	{
-		if (pthread_create(&perso[i].philosophe, NULL, routine, &perso[i]) != 0)
-			return ;
-		usleep(10);
-		i++;
-	}
+    i = 0;
+    while(i < base->philo_number)
+    {
+        base->perso[i].base = base;
+        base->perso[i].id = i + 1;
+        base->perso[i].philo_number = base->philo_number;
+        base->perso[i].time_to_die = base->time_to_die;
+        base->perso[i].time_to_eat = base->time_to_eat;
+        base->perso[i].time_to_sleep = base->time_to_sleep; 
+        base->perso[i].how_much_eat = base->how_much_eat;
+        base->perso[i].last_meal = base->time_start;
+        base->perso[i].time_start = base->time_start;
+        i++;
+    }
+}
+
+int init_fork(t_struct *base)
+{
+    int i;
+
+    i = 0;
+    while (i < base->philo_number)
+    {
+        pthread_mutex_init(&base->fork[i], NULL);
+        i++;
+    }
+    i = 1;
+    while (i <= base->philo_number)
+    {
+        if (i % 2 == 0)
+        {
+            base->perso[i - 1].f_fork = i - 1;
+            if (i == base->philo_number)
+                base->perso[i - 1].s_fork = 0;
+            else
+                base->perso[i - 1].s_fork = i;
+        }
+        else
+        {
+            if (i == 1)
+                base->perso[i - 1].f_fork = base->philo_number - 1;
+            else
+                base->perso[i - 1].f_fork = i - 2;
+            base->perso[i - 1].s_fork = i - 1;
+        }
+        i++;
+    }
+    return (0);
+}
+
+int    init_thread(t_struct *base)
+{
+    int i;
+
+    i = 0;
+    while (i < base->philo_number)
+    {
+        if (pthread_create(&base->philosophe[i], NULL, &routine, &base->perso[i]))
+            return (1);
+        usleep(10);
+        i++;
+    }
+    return (0);
 }
