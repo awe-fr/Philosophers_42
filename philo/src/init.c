@@ -79,22 +79,19 @@ void	place_fork(t_struct *base)
 	{
 		if (i % 2 == 0)
 		{
-			if (i == 1)
-				base->perso[i - 1].f_fork = base->philo_number - 1;
-			else
-				base->perso[i - 1].f_fork = i - 1;
+			base->perso[i - 1].left_fork = i - 1;
 			if (i == base->philo_number)
-				base->perso[i - 1].s_fork = 0;
+				base->perso[i - 1].right_fork = 0;
 			else
-				base->perso[i - 1].s_fork = i;
+				base->perso[i - 1].right_fork = i;
 		}
 		else
 		{
+			base->perso[i - 1].left_fork = i - 1;
 			if (i == base->philo_number)
-				base->perso[i - 1].f_fork = 0;
+				base->perso[i - 1].right_fork = 0;
 			else
-				base->perso[i - 1].f_fork = i;
-			base->perso[i - 1].s_fork = i - 1;
+				base->perso[i - 1].right_fork = i;
 		}
 	}
 }
