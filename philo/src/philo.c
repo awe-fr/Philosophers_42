@@ -39,9 +39,6 @@ void	take_fork(t_perso *perso)
 	}
 	else
 	{
-		pthread_mutex_lock(&perso->base->write);
-		printf("caca");
-		pthread_mutex_unlock(&perso->base->write);
 		pthread_mutex_lock(&perso->base->fork[perso->right_fork]);
 		print(perso->id, "has taken a fork", perso);
 		pthread_mutex_lock(&perso->base->fork[perso->left_fork]);
@@ -57,9 +54,6 @@ void	*routine(void *per)
 	t_perso	*perso;
 
 	perso = (t_perso *)per;
-	pthread_mutex_lock(&perso->base->write);
-	printf("%d | %d, %d\n", perso->id, perso->left_fork, perso->right_fork);
-	pthread_mutex_unlock(&perso->base->write);
 	pthread_mutex_lock(&perso->base->run);
 	while (perso->how_much_eat != 0 && perso->base->is_dead == -1)
 	{

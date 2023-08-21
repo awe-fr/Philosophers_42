@@ -6,7 +6,7 @@
 /*   By: srajaoui <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/19 03:03:55 by srajaoui          #+#    #+#             */
-/*   Updated: 2023/08/19 03:03:56 by srajaoui         ###   ########.fr       */
+/*   Updated: 2023/08/21 13:27:47 by srajaoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@
 # include <stdio.h>
 # include <pthread.h>
 # include <sys/time.h>
-# include <string.h>
 # include <stdlib.h>
 
 struct	s_struct;
