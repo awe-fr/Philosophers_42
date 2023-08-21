@@ -1,6 +1,10 @@
 NAME = philo
 
-SRCS = src/*.c
+SRCS = src/death.c\
+       src/philo.c\
+       src/utils.c\
+       src/init.c\
+       src/main.c\
 
 OBJS = $(SRCS:.c=.o)
 
